@@ -1,0 +1,25 @@
+{
+  "name": "SapienzaLessonBook",
+  "description": "Don't waste your time book lessons",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/CatMonster/SapienzaLessonBook",
+  "author": "CatMonster",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "husky install",
+    "start": "nodemon -r dotenv/config src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./src --ext js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "pretty-quick": "^3.1.3"
+  }
+}
