@@ -6,6 +6,7 @@
   "repository": "https://github.com/CatMonster/SapienzaLessonBook",
   "author": "CatMonster",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "postinstall": "husky install",
     "start": "nodemon -r dotenv/config src/index.js",
