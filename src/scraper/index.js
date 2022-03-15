@@ -20,7 +20,7 @@ export default async function scrape() {
   // -------------------------
 
   await login(page)
-  const scrapedData = await scrapeAule(page)
+  const scrapedData = await scrapeAule(page, browser)
 
   console.log(scrapedData)
 
@@ -37,24 +37,24 @@ const login = async (page) => {
   await page.$eval('input[type="submit"]', (el) => el.click())
 }
 
-const scrapeAule = async (page) => {
+const scrapeAule = async (page, browser) => {
   await page.goto('https://prodigit.uniroma1.it/prenotazioni/prenotaaule.nsf/prenotaposto-aula-lezioni', {
     waitUntil: 'load',
   })
-
-  const edifici = await page.$$('#codiceedificio option')
+  const qtyEdifici = await page.$$('#codiceedificio option').then((arr) => arr.length)
   const data = []
 
-  for (let i = 1; i < edifici.length; i++) {
-    const edificio = edifici[i]
+  for (let i = 1; i < qtyEdifici; i++) {
+    const newPageInstance = await openNewPage(browser)
+    const edificio = await newPageInstance.$$('#codiceedificio option').then((edificio) => edificio[i])
     const edificioName = await edificio
       .evaluate((el) => el.innerText)
       .then((value) => value.replace(/(\r\n|\n|\r)/gm, ''))
 
-    const aule = await loadAule(page, edificio)
+    const aule = await loadAule(newPageInstance, { edificioName, edificio })
 
     data.push({
-      edificioName,
+      edificio: edificioName,
       aule,
     })
   }
@@ -62,22 +62,30 @@ const scrapeAule = async (page) => {
   return data
 }
 
-const loadAule = async (page, edificioOption) => {
+const openNewPage = async (browser) => {
+  const { PAGE_W, PAGE_H } = process.env
+
+  const page = await browser.newPage()
+  await page.setViewport({ width: parseInt(PAGE_W), height: parseInt(PAGE_H) })
+  await page.goto('https://prodigit.uniroma1.it/prenotazioni/prenotaaule.nsf/prenotaposto-aula-lezioni', {
+    waitUntil: 'load',
+  })
+
+  return page
+}
+
+const loadAule = async (page, { edificioName, edificio }) => {
   // Selecting option via js, this website is a shit,
   // they are not closing option tags and not using any values,
   // so using the hand way
 
-  const edificioName = await edificioOption
-    .evaluate((el) => el.innerText)
-    .then((value) => value.replace(/(\r\n|\n|\r)/gm, ''))
-
   // Injecting 'selected' attribute to current option
-  await edificioOption.evaluate((el) => el.setAttribute('selected', ''))
+  await edificio.evaluate((el) => el.setAttribute('selected', ''))
   // Tricking their function to load values in their stupid backend
   // eslint-disable-next-line no-undef
-  await edificioOption.evaluate(() => _doClick('$Refresh', this, '_self', '#_RefreshKW_codiceedificio'))
+  await edificio.evaluate(() => _doClick('$Refresh', this, '_self', '#_RefreshKW_codiceedificio'))
 
-  await page.waitForSelector('select[name="aula"]', { timeout: 1000 })
+  await page.waitForNavigation({ timeout: 5000 })
 
   const rawAule = await page.$$("select[name='aula'] option")
   console.log(`Edificio - ${edificioName}: ${rawAule.length} ${rawAule.length > 1 ? 'aule' : 'aula'} found`)
@@ -89,5 +97,6 @@ const loadAule = async (page, edificioOption) => {
     temp.push(aula)
   }
 
+  page.close()
   return temp
 }
