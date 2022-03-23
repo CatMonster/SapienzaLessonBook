@@ -1,8 +1,9 @@
 'use strict'
 
 import puppeteer from 'puppeteer'
+import saveOnDisk from './saveOnDisk.js'
 
-export default async function scrape() {
+async function main() {
   const { DEBUG, PAGE_W, PAGE_H, CHROME_PATH, PROFILE_PATH } = process.env
 
   // Init chromium instance
@@ -21,10 +22,9 @@ export default async function scrape() {
 
   await login(page)
   const scrapedData = await scrapeAule(page, browser)
+  await page.close()
 
-  console.log(scrapedData)
-
-  // page.close()
+  saveOnDisk(scrapedData)
 }
 
 const login = async (page) => {
@@ -100,3 +100,5 @@ const loadAule = async (page, { edificioName, edificio }) => {
   page.close()
   return temp
 }
+
+main()
