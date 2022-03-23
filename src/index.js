@@ -1,7 +1,7 @@
 'use strict'
 
 //import { login, book } from './calls.js'
-import test from './testParsing'
+import test from './testParsing.js'
 
 const main = async () => {
   // const { LOGIN_USERNAME, LOGIN_PASSWORD } = process.env

@@ -1,5 +1,5 @@
-import csvToJson from 'csv-file-to-json'
 import axios from 'axios'
+import papaparse from 'papaparse'
 
 export default async function test() {
   const csv = await axios
@@ -11,22 +11,10 @@ export default async function test() {
       return res.data
     })
     .catch((err) => console.log(err))
-  const dataInJSON = csvToJson({
-    data: csv,
-    hasHeaders: false,
-    headers: [
-      'NOME GIORNO',
-      'GIORNO',
-      'LEZIONE 1 DALLE',
-      'LEZIONE 1 ALLE',
-      'LEZIONE 1 EDIFICIO',
-      'LEZIONE 1 AULA',
-      'LEZIONE 2 DALLE',
-      'LEZIONE 2 ALLE',
-      'LEZIONE 2 EDIFICIO',
-      'LEZIONE 2 AULA',
-    ],
-  })
 
+  const dataInJSON = papaparse.parse(csv, {
+    download: false,
+    header: true,
+  })
   console.log(dataInJSON)
 }
