@@ -87,6 +87,15 @@ const loadAule = async (page, { edificioName, edificio }) => {
 
   await page.waitForNavigation({ timeout: 5000 })
 
+  const indirizzo = await page.$eval(
+    'body > form > section > article > table:nth-child(4) > tbody > tr:nth-child(2) > td:nth-child(2) > div > font',
+    (el) => el.innerText,
+  )
+  const ubicazione = await page.$eval(
+    'body > form > section > article > table:nth-child(4) > tbody > tr:nth-child(2) > td:nth-child(3) > div > font',
+    (el) => el.innerText,
+  )
+
   const rawAule = await page.$$("select[name='aula'] option")
   console.log(`Edificio - ${edificioName}: ${rawAule.length} ${rawAule.length > 1 ? 'aule' : 'aula'} found`)
 
@@ -94,7 +103,11 @@ const loadAule = async (page, { edificioName, edificio }) => {
   // 'i' starts from 1 to avoid empty select value
   for (let i = 1; i < rawAule.length; i++) {
     const aula = await rawAule[i].evaluate((el) => el.innerText).then((value) => value.replace(/(\r\n|\n|\r)/gm, ''))
-    temp.push(aula)
+    temp.push({
+      indirizzo,
+      ubicazione,
+      aula,
+    })
   }
 
   page.close()
