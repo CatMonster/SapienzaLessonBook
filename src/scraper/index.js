@@ -96,6 +96,7 @@ const loadAule = async (page, { edificioName, edificio }) => {
     (el) => el.innerText,
   )
 
+  // eslint-disable-next-line quotes
   const rawAule = await page.$$("select[name='aula'] option")
   console.log(`Edificio - ${edificioName}: ${rawAule.length} ${rawAule.length > 1 ? 'aule' : 'aula'} found`)
 
