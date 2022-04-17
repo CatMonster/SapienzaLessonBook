@@ -25,6 +25,7 @@ export function login(username, password) {
 }
 
 export function book(cookie, data) {
+  const { CODICE_FISCALE, LOGIN_USERNAME, DATA_NASCITA, COGNOME, NOME, EMAIL } = process.env
   const { dates, times, building, classroom, stringaData, codicesiram } = data
 
   const form = `__Click:C12585E7003519C8.c8e9f943d3b2819fc12587ed0064a0a2/$Body/2.2
@@ -70,7 +71,14 @@ export function book(cookie, data) {
   codicesiram: ${codicesiram}
   $$HTMLFrontMatter:<!DOCTYPE html>
   $$HTMLTagAttributes:lang="it"
-  httpcookie:1`
+  httpcookie:1
+  matricola: ${LOGIN_USERNAME}
+  codicefiscale: ${CODICE_FISCALE}
+  datanasc: ${DATA_NASCITA}
+  cognome: ${COGNOME}
+  nome: ${NOME}
+  email: ${EMAIL}
+  controllomatr: ${LOGIN_USERNAME}`
 
   return new Promise((resolve, reject) => {
     exec(
