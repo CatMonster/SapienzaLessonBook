@@ -28,7 +28,7 @@ export function book(cookie, data) {
   const { CODICE_FISCALE, LOGIN_USERNAME, DATA_NASCITA, COGNOME, NOME, EMAIL } = process.env
   const { dates, times, building, classroom, stringaData, codicesiram } = data
 
-  const form = `__Click:C12585E7003519C8.c8e9f943d3b2819fc12587ed0064a0a2/$Body/2.2
+  const form = `__Click: C12585E7003519C8.c8e9f943d3b2819fc12587ed0064a0a2/$Body/2.9F0
   %%Surrogate_codiceedificio:1
   codiceedificio:${building}
   %%Surrogate_aula:1
@@ -65,20 +65,20 @@ export function book(cookie, data) {
   systemreaders:[admin]
   dataappo1:
   dataappo2:
-  stringadata: ${stringaData}
+  stringadata:${stringaData}
   prenotaappo:SI
   ${dates}
-  codicesiram: ${codicesiram}
+  codicesiram:${codicesiram}
   $$HTMLFrontMatter:<!DOCTYPE html>
   $$HTMLTagAttributes:lang="it"
   httpcookie:1
-  matricola: ${LOGIN_USERNAME}
-  codicefiscale: ${CODICE_FISCALE}
-  datanasc: ${DATA_NASCITA}
-  cognome: ${COGNOME}
-  nome: ${NOME}
-  email: ${EMAIL}
-  controllomatr: ${LOGIN_USERNAME}`
+  matricola:${LOGIN_USERNAME}
+  codicefiscale:${CODICE_FISCALE}
+  datanasc:${DATA_NASCITA}
+  cognome:${COGNOME}
+  nome:${NOME}
+  email:${EMAIL}
+  controllomatr:${LOGIN_USERNAME}`
 
   return new Promise((resolve, reject) => {
     exec(

@@ -1,7 +1,5 @@
 'use strict'
 
-import fs from 'fs'
-
 import { login, book } from './calls.js'
 import { bookDetails } from './utils.js'
 
@@ -37,7 +35,7 @@ const main = async () => {
     `
     }
 
-    lessons.forEach(async (lesson, i) => {
+    lessons.forEach(async (lesson) => {
       const { day, start, end, building, classroom, indirizzo, ubicazione } = lesson
 
       if (start !== '' || end !== '' || building !== '' || classroom !== '') {
@@ -52,7 +50,7 @@ const main = async () => {
 
         const codicesiram = classroom.match(`(${building}[\\s\\S]*$)`)[0]
 
-        const culo = await book(cookie, {
+        book(cookie, {
           dates,
           times,
           building,
@@ -62,7 +60,8 @@ const main = async () => {
           indirizzo,
           ubicazione,
         })
-        fs.writeFileSync(`./culetti/culo${i}.txt`, culo, 'utf-8')
+          .then((res) => console.log(res))
+          .catch((err) => console.error(err))
       }
     })
   }
