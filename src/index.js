@@ -38,7 +38,7 @@ const main = async () => {
     }
 
     lessons.forEach(async (lesson, i) => {
-      const { day, start, end, building, classroom } = lesson
+      const { day, start, end, building, classroom, indirizzo, ubicazione } = lesson
 
       if (start !== '' || end !== '' || building !== '' || classroom !== '') {
         let times = ''
@@ -50,9 +50,18 @@ const main = async () => {
           }
         }
 
-        const codicesiram = classroom.match(/(CU006[\s\S]*$)/)[0]
+        const codicesiram = classroom.match(`(${building}[\\s\\S]*$)`)[0]
 
-        const culo = await book(cookie, { dates, times, building, classroom, stringaData, codicesiram })
+        const culo = await book(cookie, {
+          dates,
+          times,
+          building,
+          classroom,
+          stringaData,
+          codicesiram,
+          indirizzo,
+          ubicazione,
+        })
         fs.writeFileSync(`./culetti/culo${i}.txt`, culo, 'utf-8')
       }
     })
