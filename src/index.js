@@ -19,38 +19,38 @@ const main = async () => {
     //                          2 - 1 * 10 = 10,  2 * 10 = 20
 
     // data1:03/10/2022
-    let dates = ''
+    let dates = []
     let stringaData = ''
     for (let d = 0; d < 10; d++) {
-      dates += `data${d + 1}=${lessons[d].day}\n`
+      dates = [...dates, `data${d + 1}=${lessons[d].day}`]
       stringaData += `${lessons[d].day}${d === 9 ? '' : '#'}`
     }
 
     const timeTemplate = (orario, start, end) => {
-      return `
-      %%Surrogate_dalleore${orario}=1
-      dalleore${orario}=${start}
-      %%Surrogate_alleore${orario}=1
-      alleore${orario}=${end}\n
-    `
+      return [
+        `%%Surrogate_dalleore${orario}=1`,
+        `dalleore${orario}=${start}`,
+        `%%Surrogate_alleore${orario}=1`,
+        `alleore${orario}=${end}`,
+      ]
     }
 
     lessons.forEach(async (lesson, i) => {
       const { day, start, end, building, classroom, indirizzo, ubicazione } = lesson
 
       if (start !== '' || end !== '' || building !== '' || classroom !== '') {
-        let times = ''
+        let times = []
         for (let t = 0; t < 10; t++) {
           if (day === lessons[t].day) {
-            times += timeTemplate(t + 1, start, end)
+            times = [...times, ...timeTemplate(t + 1, start, end)]
           } else {
-            times += timeTemplate(t + 1, '--:--', '--:--')
+            times = [...times, ...timeTemplate(t + 1, '--:--', '--:--')]
           }
         }
 
         const codicesiram = classroom.match(`(${building}[\\s\\S]*$)`)[0]
 
-        book(cookie, {
+        await book(cookie, {
           id: i,
           dates,
           times,
