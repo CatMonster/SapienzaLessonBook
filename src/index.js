@@ -22,20 +22,20 @@ const main = async () => {
     let dates = ''
     let stringaData = ''
     for (let d = 0; d < 10; d++) {
-      dates += `data${d + 1}:${lessons[d].day}\n`
+      dates += `data${d + 1}=${lessons[d].day}\n`
       stringaData += `${lessons[d].day}${d === 9 ? '' : '#'}`
     }
 
     const timeTemplate = (orario, start, end) => {
       return `
-      %%Surrogate_dalleore${orario}:1
-      dalleore${orario}:${start}
-      %%Surrogate_alleore${orario}:1
-      alleore${orario}:${end}\n
+      %%Surrogate_dalleore${orario}=1
+      dalleore${orario}=${start}
+      %%Surrogate_alleore${orario}=1
+      alleore${orario}=${end}\n
     `
     }
 
-    lessons.forEach(async (lesson) => {
+    lessons.forEach(async (lesson, i) => {
       const { day, start, end, building, classroom, indirizzo, ubicazione } = lesson
 
       if (start !== '' || end !== '' || building !== '' || classroom !== '') {
@@ -51,6 +51,7 @@ const main = async () => {
         const codicesiram = classroom.match(`(${building}[\\s\\S]*$)`)[0]
 
         book(cookie, {
+          id: i,
           dates,
           times,
           building,
