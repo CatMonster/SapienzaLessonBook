@@ -12,7 +12,7 @@ const main = async () => {
   const { data } = await bookDetails()
 
   const lessonBlocks = data.length / 10
-  for (let i = 1; i < lessonBlocks; i++) {
+  for (let i = 1; i <= lessonBlocks; i++) {
     // Array slicing is not inclusive for last element: https://stackoverflow.com/questions/3580239/javascript-array-get-range-of-items/3580255#3580255
     const lessons = data.slice((i - 1) * 10, i * 10)
     //                          1 - 1 * 10 = 0,   1 * 10 = 10
